@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>701015473036-sjucdrmcgj74hek1vcajvtvf94a3b3nh.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.701015473036-sjucdrmcgj74hek1vcajvtvf94a3b3nh</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>701015473036-3ll6kqamjkb67ojgev8c01a0b0fip71e.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCfx3RtEjEPApuEgZtM-N4aX0p0IJIDgvc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>701015473036</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.br.SafetyGrlBare</string>
+	<key>PROJECT_ID</key>
+	<string>safetygrlrefactor</string>
+	<key>STORAGE_BUCKET</key>
+	<string>safetygrlrefactor.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:701015473036:ios:e9958b381ee6d82a4ef4a9</string>
+	<key>DATABASE_URL</key>
+	<string>https://safetygrlrefactor-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

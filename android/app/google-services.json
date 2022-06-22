@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "701015473036",
+    "firebase_url": "https://safetygrlrefactor-default-rtdb.firebaseio.com",
+    "project_id": "safetygrlrefactor",
+    "storage_bucket": "safetygrlrefactor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701015473036:android:f0de3d9931828fd54ef4a9",
+        "android_client_info": {
+          "package_name": "com.safetygrlbare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "701015473036-3ll6kqamjkb67ojgev8c01a0b0fip71e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.safetygrlbare",
+            "certificate_hash": "cf4750fccb7f81f475d44ca21d35d21ae92856f2"
+          }
+        },
+        {
+          "client_id": "701015473036-4e4g5em93lca0jdd79le2ppave4c8s30.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSSqI3kEoKMEpzANwXRqjK7UgBXpaEd88"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "701015473036-4e4g5em93lca0jdd79le2ppave4c8s30.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
