@@ -2,9 +2,17 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth'
 import { Alert } from 'react-native';
 
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next'; //facebook login
+
+//#region Configurations
+
 GoogleSignin.configure({
     webClientId: '701015473036-4e4g5em93lca0jdd79le2ppave4c8s30.apps.googleusercontent.com'
 })
+
+//#endregion
+
+//#region Login and Logout handlers
 
 /**
  * Uses firebase auth system to authenticate user with Google
@@ -20,7 +28,6 @@ export async function handleLoginGoogleAsync() {
     const userSignIn = auth().signInWithCredential(googleCredential);
 
     const user = userSignIn.then((user) => {
-        alert('Teste')
         return user;
     })
         .catch((err) => {
@@ -33,6 +40,94 @@ export async function handleLoginGoogleAsync() {
 
 /**
  * 
+ * Uses firebase auth system to authenticate user with Facebook
+ * 
+ * @returns User object if successful
+ * @returns null if unsuccessful
+ */
+export async function handleLoginFacebookAsync() {
+    // Attempt login with permissions
+    const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+
+    if (result.isCancelled) {
+        throw 'User cancelled the login process';
+    }
+
+    // Once signed in, get the users AccesToken
+    const data = await AccessToken.getCurrentAccessToken();
+
+    if (!data) {
+        throw 'Something went wrong obtaining access token';
+    }
+
+    // Create a Firebase credential with the AccessToken
+    const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+    // Sign-in the user with the credential
+    const userSignedIn = auth().signInWithCredential(facebookCredential);
+    const user = userSignedIn.then((user) => {
+        return user;
+    })
+        .catch((err) => {
+            console.log(err);
+        }
+        )
+    if (user != null) return await user;
+    return null;
+
+}
+
+/**
+ * 
+ * Try to login using email and password from firebase auth services.
+ * 
+ * @param {string} email
+ * @param {string} password 
+ * 
+ * @returns {string} user object if successful.
+ */
+export async function handleLoginEmailAsync(email, password) {
+
+    if (!isValidEmail(email)) {
+        Alert.alert('❌ Email inválido', 'Por favor, insira um email válido');
+        return null;
+    }
+
+    if (!isValidPassword(password)) {
+        Alert.alert('❌ Senha inválida', 'Por favor, insira uma senha válida');
+        return null;
+    }
+
+    try {
+        const user = await auth().signInWithEmailAndPassword(email, password);
+        return user;
+    }
+    catch (error) {
+        console.log(error.message)
+        if (error.message.includes('auth/')) Alert.alert('❌', 'Por favor, verifique seu email e senha. Se você não possui uma conta, clique em "Criar conta"');
+    }
+
+    if (user != null) return await user;
+    return null;
+
+}
+
+export async function handleSignOut() {
+    try {
+        await auth().signOut();
+    }
+    catch (error) {
+        console.log(error.message);
+        Alert.alert('❌ Error', error.message);
+    }
+}
+
+//#endregion
+
+//#region Signup handlers and verifications
+
+/**
+ * 
  * @param {string}   email
  * @param {string}   password
  * 
@@ -40,27 +135,33 @@ export async function handleLoginGoogleAsync() {
  * @returns {boolean} 0 if unsuccessful
  * @returns {boolean} 1 if successful
  */
-export function signUpEmailPassword(email, password) {
+export async function signUpEmailPassword(email, password, name, telphone) {
 
     if (!email) {
         Alert.alert('Erro', 'Por favor, informe um e-mail.');
         return false
     }
-    if (!password && password.trim() && password.length > 6) {
-        Alert.alert('Erro', 'Por favor, informe uma senha que contenha .');
-        return false
+    if (!password && !isValidPassword(password)) {
+        Alert.alert('Erro', 'Por favor, informe uma senha válida.\nA senha deve conter 8 dígitos, 1 letra maiúscula, 1 letra minúscula, 1 número e 1 caractere especial.');
+        return false;
     }
     if (!isValidEmail(email)) {
         return false
     }
 
-    createUser(email, password);
+    await createUser(email, password, name, telphone);
     return true;
 }
 
-async function createUser(email, password) {
+const createUser = async (email, password, name, telphone) => {
     try {
-        let response = await auth().createUserWithEmailAndPassword(email, password);
+        console.log(email, password, name, telphone);
+        let response = auth().createUserWithEmailAndPassword(email, password).then(async (userCreds) => {
+            await userCreds.user.updateProfile({
+                displayName: name,
+            })
+            await userCreds.user.updatePhoneNumber(telphone);
+        })
         if (response && response.user) Alert.alert('✅ Usuário criado com sucesso', 'Redirecionando para a página inicial...');
 
     }
@@ -88,6 +189,32 @@ const isValidEmail = email => {
  * @returns {boolean} true or false
  */
 const isValidPassword = password => {
-    let rgx = /^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]).{8,16}$/;
-    return rgx.text(String(password));
+    let rgx = /^(?!.*\s)(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?\_₹]).{8,16}$/;
+    return rgx.test(String(password));
 }
+
+/**
+ * 
+ * Uses the firebase method to send a email verification.
+ * Will trigger the onAuthStateChanged event.
+ * 
+ * @param {String} opt - Options for actionCodeSettings
+ * 
+ * @returns {boolean} true - Success, email sent
+ * @returns {boolean} false - Error
+ * 
+ * @see Firebase docs https://firebase.google.com/docs/reference/js/v8/firebase.auth#actioncodesettings
+ * 
+ */
+export async function verificationEmail(opt = '') {
+    try {
+        opt != '' ? await auth().currentUser.sendEmailVerification(opt) : await auth().currentUser.sendEmailVerification();
+        return true;
+    }
+    catch (error) {
+        console.log(error.message);
+        return false;
+    }
+}
+
+//#endregion

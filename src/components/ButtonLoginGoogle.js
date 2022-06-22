@@ -15,6 +15,7 @@ const ButtonLoginGoogle = ({ onPress }) => {
 const style = StyleSheet.create({
     btn_body: {
         flex: 1,
+        marginBottom: 10,
     }
 });
 

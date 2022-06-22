@@ -17,7 +17,9 @@ const Button = ({ text, onPress, type = 'filled', bordered = false, size = 'larg
         backgroundColor: btnBgColor,
         paddingVertical: 8,
         width: btnSize,
-        borderRadius: btnBorderRadius
+        borderRadius: btnBorderRadius,
+        marginBottom: 10,
+        height: 'auto'
     }
 
     const textCommonStyle = {

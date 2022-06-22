@@ -1,12 +1,16 @@
-import { View, Text, StyleSheet, TextInput } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Alert } from 'react-native'
 import React from 'react'
 
-import { handleLoginGoogleAsync } from '../database/auth'
+import { handleLoginGoogleAsync, handleLoginEmailAsync } from '../database/auth'
 
 import ButtonLoginGoogle from '../components/ButtonLoginGoogle'
 import Button from '../components/Button'
 
-export default function Login() {
+export default function Login({ navigation }) {
+
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+
     return (
         <View style={styles.container}>
             <View style={{ width: '60%' }}>
@@ -15,6 +19,7 @@ export default function Login() {
                     <TextInput
                         style={{ backgroundColor: '#fff', borderRadius: 5, padding: 10, marginBottom: 10 }}
                         placeholder='Enter your email'
+                        onChangeText={(text) => setEmail(text)}
                     />
                 </View>
 
@@ -24,23 +29,43 @@ export default function Login() {
                         style={{ backgroundColor: '#fff', borderRadius: 5, padding: 10, marginBottom: 10 }}
                         placeholder='Enter your password'
                         secureTextEntry
+                        onChangeText={(text) => setPassword(text)}
                     />
                 </View>
-                <View style={{ alignItems: 'center' }}>
-                    <Button text={'Entrar'} onPress={() => alert('clicou')} size='small' />
+                <View style={{ alignItems: 'center', borderWidth: 1, borderColor: 'black' }}>
+                    <Button
+                        text={'Entrar'}
+                        onPress={async () => {
+                            const user = await handleLoginEmailAsync(email, password);
+                            if (user != null && user?.emailVerified) {
+                                Alert.alert('✅ Login realizado com sucesso', 'Redirecionando você pra a página inicial...')
+                                navigation.navigate('Home')
+                            }
+                            if (user != null && !user?.emailVerified) {
+                                Alert.alert('⚠️ Atenção', 'Você precisa verificar seu email para continuar.')
+                            }
+                        }}
+                        size='small'
+                    />
                     <ButtonLoginGoogle onPress={async () => {
-                        const user = await handleLoginGoogleAsync();
-
-                        console.log("user é :", user);
-
-                        if (user != null) {
-                            alert('Login realizado com sucesso')
+                        try {
+                            const user = await handleLoginGoogleAsync();
+                            if (user != null) {
+                                Alert.alert('✅ Login realizado com sucesso', 'Redirecionando você pra a página inicial...')
+                                navigation.navigate('Home')
+                            }
+                        } catch (error) {
+                            console.log(error.message);
+                            Alert.alert('❌ Error', error.message);
                         }
-                        else {
-                            alert('Login falhou')
-                        }
+                    }
+                    } />
+                    <Text
+                        onPress={() => navigation.navigate('SignUp')}
+                        style={{ marginTop: 100, color: '#0000FF', textDecorationLine: 'underline', fontSize: 12 }}>
 
-                    }} />
+                        Sem conta? Crie uma aqui
+                    </Text>
                 </View>
             </View>
         </View>
@@ -61,6 +86,6 @@ const styles = StyleSheet.create({
     passwordContainer: {
         width: '100%',
         justifyContent: 'center',
-        marginBottom: 5,
+        marginBottom: 2,
     }
 })

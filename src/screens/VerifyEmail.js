@@ -1,20 +1,22 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import Button from '../components/Button'
-import auth from '@react-native-firebase/auth'
 
-export default function Home({ navigation }) {
+import auth from '@react-native-firebase/auth'
+import { verificationEmail } from '../database/auth'
+
+export default function VerifyEmail() {
     return (
         <View style={styles.container}>
-            <Text>Home</Text>
+            <Text>Verifique seu email para poder acessar.</Text>
+            <Text>Não recebeu o e-mail? <Text style={{ color: '#0000FF' }} onPress={async () => { await verificationEmail() }}>Clique aqui!</Text></Text>
             <Button onPress={() => {
                 auth().signOut();
-                navigation.replace('Login');
             }}
                 text={'Sair'}
                 size={'small'}
             />
-        </View>
+        </View >
     )
 }
 
