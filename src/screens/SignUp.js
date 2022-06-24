@@ -9,7 +9,6 @@ import {
 
 import Button from '../components/Button';
 import ButtonLoginGoogle from '../components/ButtonLoginGoogle';
-import ButtonLoginFacebook from '../components/ButtonLoginFacebook';
 
 export default function Signup() {
     const [name, setName] = React.useState('');

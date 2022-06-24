@@ -1,4 +1,5 @@
 import React from "react";
+import { StatusBar } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import auth from '@react-native-firebase/auth'
@@ -27,11 +28,14 @@ function App() {
 
     if (initializing) return null;
 
-    console.log(user);
 
     if (!user) {
         return (
             <NavigationContainer>
+                <StatusBar
+                    backgroundColor={'transparent'}
+                    translucent
+                />
                 <Stack.Navigator
                     initialRouteName="Login"
                     screenOptions={{ headerShown: false }}>
@@ -46,6 +50,10 @@ function App() {
     if (user?.emailVerified === true)
         return (
             <NavigationContainer>
+                <StatusBar
+                    backgroundColor={'transparent'}
+                    translucent
+                />
                 <Stack.Navigator
                     initialRouteName="Home"
                     screenOptions={{ headerShown: false }}>
@@ -58,6 +66,10 @@ function App() {
 
     return (
         <NavigationContainer>
+            <StatusBar
+                backgroundColor={'transparent'}
+                translucent
+            />
             <Stack.Navigator
                 initialRouteName="VerifyEmail"
                 screenOptions={{ headerShown: false }}>

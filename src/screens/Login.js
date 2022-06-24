@@ -1,18 +1,25 @@
-import { View, Text, StyleSheet, TextInput, Alert } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Alert, KeyboardAvoidingView, Platform, StatusBar } from 'react-native'
 import React from 'react'
 
 import { handleLoginGoogleAsync, handleLoginEmailAsync } from '../database/auth'
 
 import ButtonLoginGoogle from '../components/ButtonLoginGoogle'
 import Button from '../components/Button'
+import { Checkbox } from 'react-native-paper'
+
+import * as gStyles from '../global/styles'
 
 export default function Login({ navigation }) {
 
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [passVisibility, setPassVisibility] = React.useState(true);
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={[styles.container, styles.AndroidSafeArea]}>
+
             <View style={{ width: '60%' }}>
                 <View style={styles.emailContainer}>
                     <Text>Email</Text>
@@ -28,11 +35,21 @@ export default function Login({ navigation }) {
                     <TextInput
                         style={{ backgroundColor: '#fff', borderRadius: 5, padding: 10, marginBottom: 10 }}
                         placeholder='Enter your password'
-                        secureTextEntry
+                        secureTextEntry={passVisibility}
                         onChangeText={(text) => setPassword(text)}
                     />
+                    <View style={{ marginBottom: 10, alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap' }}>
+                        <Checkbox
+                            status={!passVisibility ? 'checked' : 'unchecked'}
+                            onPress={() => {
+                                setPassVisibility(!passVisibility)
+                            }}
+                            color='#00ff'
+                        />
+                        <Text style={{ fontSize: 12, color: 'black', fontWeight: 'bold' }}>Mostrar senha</Text>
+                    </View>
                 </View>
-                <View style={{ alignItems: 'center', borderWidth: 1, borderColor: 'black' }}>
+                <View style={{ alignItems: 'center' }}>
                     <Button
                         text={'Entrar'}
                         onPress={async () => {
@@ -68,11 +85,23 @@ export default function Login({ navigation }) {
                     </Text>
                 </View>
             </View>
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 
 const styles = StyleSheet.create({
+
+    /**
+     * AndroidSafeArea - Android only.
+     * 
+     * For iOS use 'SafeAreaView' instead.
+     * 
+     * @platform android
+     * @see https://reactnative.dev/docs/statusbar#currentheight-android
+     */
+    AndroidSafeArea: {
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    },
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -85,7 +114,6 @@ const styles = StyleSheet.create({
     },
     passwordContainer: {
         width: '100%',
-        justifyContent: 'center',
         marginBottom: 2,
     }
 })

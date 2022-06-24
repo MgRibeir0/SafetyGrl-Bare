@@ -2,7 +2,7 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth'
 import { Alert } from 'react-native';
 
-import { LoginManager, AccessToken } from 'react-native-fbsdk-next'; //facebook login
+//import { LoginManager, AccessToken } from 'react-native-fbsdk-next'; //facebook login
 
 //#region Configurations
 
@@ -45,37 +45,37 @@ export async function handleLoginGoogleAsync() {
  * @returns User object if successful
  * @returns null if unsuccessful
  */
-export async function handleLoginFacebookAsync() {
-    // Attempt login with permissions
-    const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+// export async function handleLoginFacebookAsync() {
+//     // Attempt login with permissions
+//     const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
 
-    if (result.isCancelled) {
-        throw 'User cancelled the login process';
-    }
+//     if (result.isCancelled) {
+//         throw 'User cancelled the login process';
+//     }
 
-    // Once signed in, get the users AccesToken
-    const data = await AccessToken.getCurrentAccessToken();
+//     // Once signed in, get the users AccesToken
+//     const data = await AccessToken.getCurrentAccessToken();
 
-    if (!data) {
-        throw 'Something went wrong obtaining access token';
-    }
+//     if (!data) {
+//         throw 'Something went wrong obtaining access token';
+//     }
 
-    // Create a Firebase credential with the AccessToken
-    const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+//     // Create a Firebase credential with the AccessToken
+//     const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
 
-    // Sign-in the user with the credential
-    const userSignedIn = auth().signInWithCredential(facebookCredential);
-    const user = userSignedIn.then((user) => {
-        return user;
-    })
-        .catch((err) => {
-            console.log(err);
-        }
-        )
-    if (user != null) return await user;
-    return null;
+//     // Sign-in the user with the credential
+//     const userSignedIn = auth().signInWithCredential(facebookCredential);
+//     const user = userSignedIn.then((user) => {
+//         return user;
+//     })
+//         .catch((err) => {
+//             console.log(err);
+//         }
+//         )
+//     if (user != null) return await user;
+//     return null;
 
-}
+// }
 
 /**
  * 
