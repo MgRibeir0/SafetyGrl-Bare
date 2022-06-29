@@ -4,10 +4,11 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import auth from '@react-native-firebase/auth'
 
-import Home from "./src/screens/Home";
 import SignUp from "./src/screens/SignUp";
 import Login from "./src/screens/Login";
 import VerifyEmail from "./src/screens/VerifyEmail";
+import SplashScreen from './src/screens/SplashScreen';
+import TabBar from "./src/navigator/TabBar";
 
 const Stack = createNativeStackNavigator();
 
@@ -37,17 +38,18 @@ function App() {
                     translucent
                 />
                 <Stack.Navigator
-                    initialRouteName="Login"
+                    initialRouteName="SplashScreen"
                     screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name="Home" component={Home} />
+                    <Stack.Screen name="Splash" component={SplashScreen} />
                     <Stack.Screen name="SignUp" component={SignUp} />
+                    <Stack.Screen name="TabBar" component={TabBar} />
                     <Stack.Screen name="Login" component={Login} />
                 </Stack.Navigator>
             </NavigationContainer>
         );
     }
 
-    if (user?.emailVerified === true)
+    if (user?.emailVerified === true) {
         return (
             <NavigationContainer>
                 <StatusBar
@@ -55,28 +57,31 @@ function App() {
                     translucent
                 />
                 <Stack.Navigator
-                    initialRouteName="Home"
+                    initialRouteName="SplashScreen"
                     screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name="Home" component={Home} />
+                    <Stack.Screen name="Splash" component={SplashScreen} />
                     <Stack.Screen name="SignUp" component={SignUp} />
                     <Stack.Screen name="Login" component={Login} />
+                    <Stack.Screen name="TabBar" component={TabBar} />
                 </Stack.Navigator>
             </NavigationContainer>
         )
+    } else {
 
-    return (
-        <NavigationContainer>
-            <StatusBar
-                backgroundColor={'transparent'}
-                translucent
-            />
-            <Stack.Navigator
-                initialRouteName="VerifyEmail"
-                screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
-            </Stack.Navigator>
-        </NavigationContainer>
-    )
+        return (
+            <NavigationContainer>
+                <StatusBar
+                    backgroundColor={'transparent'}
+                    translucent
+                />
+                <Stack.Navigator
+                    initialRouteName="VerifyEmail"
+                    screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name="VerifyEmail" component={VerifyEmail} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        )
+    }
 }
 
 export default App;

@@ -1,70 +1,91 @@
-import { View, Text, StyleSheet, TextInput, Alert, KeyboardAvoidingView, Platform, StatusBar } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Alert, KeyboardAvoidingView, Platform, StatusBar, TouchableOpacity } from 'react-native'
 import React from 'react'
 
 import { handleLoginGoogleAsync, handleLoginEmailAsync } from '../database/auth'
 
 import ButtonLoginGoogle from '../components/ButtonLoginGoogle'
-import Button from '../components/Button'
 import { Checkbox } from 'react-native-paper'
 
-import * as gStyles from '../global/styles'
+import * as Animatable from 'react-native-animatable'
+import Colors from '../constants/Colors'
 
 export default function Login({ navigation }) {
 
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [passVisibility, setPassVisibility] = React.useState(true);
+    const animText = React.useRef(null);
+    const animForm = React.useRef(null);
+    const [animAway, setAnimAway] = React.useState(false);
 
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={[styles.container, styles.AndroidSafeArea]}>
 
-            <View style={{ width: '60%' }}>
-                <View style={styles.emailContainer}>
-                    <Text>Email</Text>
-                    <TextInput
-                        style={{ backgroundColor: '#fff', borderRadius: 5, padding: 10, marginBottom: 10 }}
-                        placeholder='Enter your email'
-                        onChangeText={(text) => setEmail(text)}
+            <Animatable.View animation={animAway ? 'fadeOutLeft' : 'fadeInLeft'} delay={500} style={styles.containerHeader} ref={animText}>
+                <Text style={styles.message}>Bem vinde!</Text>
+            </Animatable.View>
+
+            <Animatable.View style={styles.containerForm} animation={animAway ? 'fadeOutDown' : 'fadeInUp'} ref={animForm} onAnimationEnd={() => {
+                if (animAway) {
+                    navigation.replace('TabBar')
+                }
+            }}>
+                <Text style={styles.title}>Email</Text>
+                <TextInput
+                    placeholder='Digite seu email'
+                    style={styles.input}
+                    onChangeText={text => setEmail(text)}
+                />
+
+                <Text style={styles.title}>Senha</Text>
+                <TextInput
+                    placeholder='Digite sua senha'
+                    style={styles.input}
+                    secureTextEntry={passVisibility}
+                    onChangeText={text => setPassword(text)}
+                />
+
+                <View style={styles.checkbox}>
+                    <Checkbox
+                        status={!passVisibility ? 'checked' : 'unchecked'}
+                        onPress={() => {
+                            setPassVisibility(!passVisibility)
+                        }}
+                        color={Colors.skyBlue}
                     />
+                    <Text style={{ fontSize: 12, color: 'black', fontWeight: 'bold' }}>Mostrar senha</Text>
                 </View>
 
-                <View style={styles.passwordContainer}>
-                    <Text>Password</Text>
-                    <TextInput
-                        style={{ backgroundColor: '#fff', borderRadius: 5, padding: 10, marginBottom: 10 }}
-                        placeholder='Enter your password'
-                        secureTextEntry={passVisibility}
-                        onChangeText={(text) => setPassword(text)}
-                    />
-                    <View style={{ marginBottom: 10, alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap' }}>
-                        <Checkbox
-                            status={!passVisibility ? 'checked' : 'unchecked'}
-                            onPress={() => {
-                                setPassVisibility(!passVisibility)
-                            }}
-                            color='#00ff'
-                        />
-                        <Text style={{ fontSize: 12, color: 'black', fontWeight: 'bold' }}>Mostrar senha</Text>
-                    </View>
-                </View>
-                <View style={{ alignItems: 'center' }}>
-                    <Button
-                        text={'Entrar'}
-                        onPress={async () => {
-                            const user = await handleLoginEmailAsync(email, password);
-                            if (user != null && user?.emailVerified) {
-                                Alert.alert('✅ Login realizado com sucesso', 'Redirecionando você pra a página inicial...')
-                                navigation.navigate('Home')
-                            }
-                            if (user != null && !user?.emailVerified) {
-                                Alert.alert('⚠️ Atenção', 'Você precisa verificar seu email para continuar.')
-                            }
-                        }}
-                        size='small'
-                    />
-                    <ButtonLoginGoogle onPress={async () => {
+
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={async () => {
+                        // const user = await handleLoginEmailAsync(email, password)
+
+                        // console.log(`user.user.emailVerified: ${user?.user?.emailVerified}`)
+                        // console.log(`user: ${user}`)
+
+                        // if (animAway) navigation.navigate('Home')
+
+                        // if (user != null && user?.user?.emailVerified) {
+                        //     setAnimAway(true)
+                        // }
+                        // if (user != null && !user?.user?.emailVerified) {
+                        //     Alert.alert('⚠️ Atenção', 'Você precisa verificar seu email para continuar.')
+                        //     navigation.navigate('VerifyEmail')
+                        // }
+
+                        setAnimAway(true)
+
+                    }}
+                >
+                    <Text style={styles.buttonText}>Entrar</Text>
+                </TouchableOpacity>
+
+                <ButtonLoginGoogle
+                    onPress={async () => {
                         try {
                             const user = await handleLoginGoogleAsync();
                             if (user != null) {
@@ -76,16 +97,18 @@ export default function Login({ navigation }) {
                             Alert.alert('❌ Error', error.message);
                         }
                     }
-                    } />
-                    <Text
-                        onPress={() => navigation.navigate('SignUp')}
-                        style={{ marginTop: 100, color: '#0000FF', textDecorationLine: 'underline', fontSize: 12 }}>
+                    }
+                    styleProps={{ alignSelf: 'center', marginTop: 14 }}
+                >
+                </ButtonLoginGoogle>
 
-                        Sem conta? Crie uma aqui
-                    </Text>
-                </View>
-            </View>
-        </KeyboardAvoidingView>
+                <TouchableOpacity
+                    style={styles.buttonRegister}>
+                    <Text style={styles.buttonRegisterText}>Não possui uma conta? Cadastre-se</Text>
+                </TouchableOpacity>
+
+            </Animatable.View>
+        </KeyboardAvoidingView >
     )
 }
 
@@ -104,16 +127,62 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        justifyContent: 'center',
+        backgroundColor: Colors.lightPink,
+    },
+    containerHeader: {
+        marginTop: '14%',
+        marginBottom: '8%',
+        paddingStart: '5%',
+    },
+    message: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: Colors.white,
+    },
+    containerForm: {
+        backgroundColor: Colors.white,
+        flex: 1,
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25,
+        paddingStart: '5%',
+        paddingEnd: '5%',
+    },
+    title: {
+        fontSize: 20,
+        marginTop: 28,
+    },
+    input: {
+        borderBottomWidth: 1,
+        height: 40,
+        marginBottom: 12,
+        fontSize: 16,
+    },
+    button: {
+        backgroundColor: Colors.lightPink,
+        width: '51%',
+        borderRadius: 4,
+        paddingVertical: 8,
+        marginTop: 14,
         alignItems: 'center',
-    },
-    emailContainer: {
-        width: '100%',
         justifyContent: 'center',
-        marginBottom: 1,
+        alignSelf: 'center',
     },
-    passwordContainer: {
-        width: '100%',
-        marginBottom: 2,
+    buttonText: {
+        color: Colors.white,
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    buttonRegister: {
+        marginTop: 14,
+        alignSelf: 'center',
+    },
+    buttonRegisterText: {
+        color: Colors.lightGray,
+    },
+    checkbox: {
+        marginBottom: 10,
+        alignItems: 'center',
+        flexDirection: 'row',
+        flexWrap: 'wrap'
     }
 })

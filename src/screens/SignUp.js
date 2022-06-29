@@ -111,7 +111,7 @@ export default function Signup() {
                                         '✅ Login realizado com sucesso',
                                         'Redirecionando você pra a página inicial...',
                                     );
-                                    navigation.navigate('Home');
+                                    navigation.navigate('AnimTab');
                                 }
                             } catch (error) {
                                 console.log(error.message);

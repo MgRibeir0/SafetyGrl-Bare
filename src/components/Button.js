@@ -5,12 +5,12 @@ import { Text, View, TouchableOpacity, Dimensions } from 'react-native'
 const width = Dimensions.get('window').width
 
 
-const Button = ({ text, onPress, type = 'filled', bordered = false, size = 'large' }) => {
+const Button = ({ text, onPress, type = 'filled', bordered = false, size = 'large', colorBg = '#3f51b5', colorText = '#6371c2' }) => {
     const large = width / 1.3
     const small = width / 2
     const btnSize = size === 'large' ? large : small
-    const btnBgColor = type === 'filled' ? '#3f51b5' : 'transparent'
-    const btnTextColor = type === 'filled' ? '#ffffff' : '#6371c2'
+    const btnBgColor = type === 'filled' ? colorBg : 'transparent'
+    const btnTextColor = type === 'filled' ? '#ffffff' : colorText
     const btnBorderRadius = bordered ? 30 : 5
 
     const containerCommonStyle = {

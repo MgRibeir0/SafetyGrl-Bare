@@ -1,20 +1,21 @@
 import { TouchableOpacity, StyleSheet, Image } from 'react-native'
 import React from 'react'
 
-const ButtonLoginGoogle = ({ onPress }) => {
+const ButtonLoginGoogle = ({ onPress, styleProps }) => {
     return (
         <TouchableOpacity
-            style={style.btn_body}
+            style={[style.btn_body, styleProps]}
             onPress={onPress}
         >
-            <Image source={require('../assets/btn_google_login_light.png')} />
+            <Image
+                source={require('../assets/btn_google_login_light.png')}
+            />
         </TouchableOpacity>
     )
 }
 
 const style = StyleSheet.create({
     btn_body: {
-        flex: 1,
         marginBottom: 10,
     }
 });
