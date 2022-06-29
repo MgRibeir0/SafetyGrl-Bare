@@ -3,20 +3,27 @@ import React from 'react'
 import Button from '../components/Button'
 import auth from '@react-native-firebase/auth'
 import * as Animatable from 'react-native-animatable'
+import { useIsFocused } from '@react-navigation/native'
 
 export default function Home({ navigation }) {
 
-    const [firstRun, setFirstRun] = React.useState(false);
+    const [firstRun, setFirstRun] = React.useState(true)
+    const animView = React.useRef(null)
 
-    React.useEffect(() => {
-        if (firstRun === false)
-            setFirstRun(true);
-    }, [])
+    navigation.addListener('blur', () => {
+        setFirstRun(false)
+    })
 
+    navigation.addListener('focus', () => {
+        if (!firstRun)
+            animView.current.fadeInRight(500);
+        if (firstRun)
+            animView.current.fadeInUp(500)
+    })
 
     return (
+        <Animatable.View style={styles.container} ref={animView}>
 
-        <Animatable.View style={styles.container} animation={firstRun ? 'fadeInUp' : 'fadeInRight'}>
             <Text>Home</Text>
             <Button onPress={() => {
                 auth().signOut();

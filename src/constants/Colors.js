@@ -13,7 +13,7 @@ export default {
     red: '#ff2f68',
     lightRed: '#ff4f7e',
     darkRed: '#d9365e',
-    purple: '#8f06e4',
+    darkPurple: '#8f06e4',
     skyBlue: 'skyblue',
     yellow: '#f8c907',
     pink: '#ff4c98',
@@ -23,6 +23,8 @@ export default {
     gray: '#CCCCCC',
     darkGray: '#999999',
     lightGray: '#A1A1A1',
+    lightPurple: '#c56dfc',
+    purple: '#bb4dff',
 
     darkOverlayColor: 'rgba(0, 0, 0, 0.4)',
     darkOverlayColor2: 'rgba(0, 0, 0, 0.8)',
