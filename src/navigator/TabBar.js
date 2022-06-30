@@ -53,6 +53,7 @@ export default function TabBar() {
                     tabBarIcon: ({ size, focused }) => (<ButtonNew size={size} focused={focused} />)
                 }}
             />
+
             <Tab.Screen
                 name="User"
                 component={User}
@@ -60,6 +61,7 @@ export default function TabBar() {
                     tabBarIcon: ({ size, color, focused }) => (<Icon name={focused ? 'ios-person-circle' : 'ios-person-circle-outline'} size={size} color={color} />)
                 }}
             />
+
             <Tab.Screen
                 name="Settings"
                 component={Settings}

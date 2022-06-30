@@ -36,8 +36,8 @@ export default {
 
 
     // bags background colors
-    bag1Bg: '#ea7a72',
-    bag2Bg: '#c2c5d1',
+    bag1Bg: '#FFCEAA',
+    bag2Bg: '#F27D83',
     bag3Bg: '#82a7c9',
     bag4Bg: '#d49d8f',
     bag5Bg: '#ccd9c6',
@@ -47,4 +47,6 @@ export default {
     bag9Bg: '#eb849c',
     bag10Bg: '#979dc1',
     bag11Bg: '#c7d3c0',
+    bag12Bg: '#ea7a72',
+    bag13Bg: '#c2c5d1',
 }

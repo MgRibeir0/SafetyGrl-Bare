@@ -1,7 +1,8 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 
-export default function Statements({ navigation }) {
+export default function Statements() {
+
     return (
         <View style={styles.container}>
             <Text>Statements</Text>

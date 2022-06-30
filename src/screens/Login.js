@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, Alert, KeyboardAvoidingView, Platform, StatusBar, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Alert, KeyboardAvoidingView, Platform, StatusBar, TouchableOpacity, BackHandler } from 'react-native'
 import React from 'react'
 
 import { handleLoginGoogleAsync, handleLoginEmailAsync } from '../database/auth'
@@ -14,24 +14,48 @@ export default function Login({ navigation }) {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [passVisibility, setPassVisibility] = React.useState(true);
+    const [error, setError] = React.useState('');
     const animText = React.useRef(null);
     const animForm = React.useRef(null);
+    const animError = React.useRef(null);
     const [animAway, setAnimAway] = React.useState(false);
+    const [animPassword, setAnimPassword] = React.useState(false);
+
+    navigation.addListener('focus', () => {
+        if (!animAway) {
+            animText.current.fadeInLeft(500);
+            animForm.current.fadeInUp(500);
+            setAnimAway(false);
+        }
+    })
 
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={[styles.container, styles.AndroidSafeArea]}>
 
-            <Animatable.View animation={animAway ? 'fadeOutLeft' : 'fadeInLeft'} delay={500} style={styles.containerHeader} ref={animText}>
+            <Animatable.View
+                animation={animAway || animPassword ? 'fadeOutLeft' : 'fadeInLeft'}
+                delay={500}
+                style={styles.containerHeader}
+                ref={animText}
+                onAnimationEnd={() => { if (animAway) navigation.navigate('TabBar') }}>
                 <Text style={styles.message}>Bem vinde!</Text>
             </Animatable.View>
 
-            <Animatable.View style={styles.containerForm} animation={animAway ? 'fadeOutDown' : 'fadeInUp'} ref={animForm} onAnimationEnd={() => {
-                if (animAway) {
-                    navigation.replace('TabBar')
-                }
-            }}>
+            <Animatable.View
+                style={styles.containerForm}
+                animation={animAway || animPassword ? 'fadeOutDown' : 'fadeInUp'}
+                ref={animForm}
+                onAnimationEnd={() => {
+                    if (animAway) {
+                        navigation.replace('TabBar')
+                    }
+                    if (animPassword) {
+                        navigation.navigate('Password')
+                    }
+                }}
+            >
                 <Text style={styles.title}>Email</Text>
                 <TextInput
                     placeholder='Digite seu email'
@@ -58,26 +82,21 @@ export default function Login({ navigation }) {
                     <Text style={{ fontSize: 12, color: 'black', fontWeight: 'bold' }}>Mostrar senha</Text>
                 </View>
 
+                {error.length > 0 && <Animatable.Text animation='shake' duration={500} style={styles.error} ref={animError}>{error}</Animatable.Text>}
 
                 <TouchableOpacity
                     style={styles.button}
                     onPress={async () => {
-                        // const user = await handleLoginEmailAsync(email, password)
+                        const user = await handleLoginEmailAsync(email, password)
 
-                        // console.log(`user.user.emailVerified: ${user?.user?.emailVerified}`)
-                        // console.log(`user: ${user}`)
+                        console.log(user)
 
-                        // if (animAway) navigation.navigate('Home')
+                        if (user != null && user?.user?.emailVerified) {
+                            setAnimAway(true)
+                        }
 
-                        // if (user != null && user?.user?.emailVerified) {
-                        //     setAnimAway(true)
-                        // }
-                        // if (user != null && !user?.user?.emailVerified) {
-                        //     Alert.alert('⚠️ Atenção', 'Você precisa verificar seu email para continuar.')
-                        //     navigation.navigate('VerifyEmail')
-                        // }
-
-                        setAnimAway(true)
+                        if (!user.user && user?.startsWith('[auth/')) setError('Email ou senha incorretos, favor verificar seu email e senha')
+                        if (error.length > 0) animError.current.shake(500)
 
                     }}
                 >
@@ -86,16 +105,13 @@ export default function Login({ navigation }) {
 
                 <ButtonLoginGoogle
                     onPress={async () => {
-                        try {
-                            const user = await handleLoginGoogleAsync();
-                            if (user != null) {
-                                Alert.alert('✅ Login realizado com sucesso', 'Redirecionando você pra a página inicial...')
-                                navigation.navigate('Home')
-                            }
-                        } catch (error) {
-                            console.log(error.message);
-                            Alert.alert('❌ Error', error.message);
+                        const user = await handleLoginGoogleAsync()
+                        if (user != null && user?.user?.emailVerified) {
+                            setAnimAway(true)
                         }
+
+                        if (!user.user && user?.startsWith('[auth/')) setError('Ops, algo deu errado!\nTente novamente mais tarde')
+                        if (error.length > 0) animError.current.shake(500)
                     }
                     }
                     styleProps={{ alignSelf: 'center', marginTop: 14 }}
@@ -103,11 +119,20 @@ export default function Login({ navigation }) {
                 </ButtonLoginGoogle>
 
                 <TouchableOpacity
+                    style={styles.buttonRegister}
+                    onPress={() => {
+                        setAnimPassword(true)
+                    }}>
+                    <Text style={styles.buttonRegisterText}>Esqueci minha senha</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
                     style={styles.buttonRegister}>
                     <Text style={styles.buttonRegisterText}>Não possui uma conta? Cadastre-se</Text>
                 </TouchableOpacity>
 
             </Animatable.View>
+
         </KeyboardAvoidingView >
     )
 }
@@ -184,5 +209,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         flexWrap: 'wrap'
+    },
+    error: {
+        color: Colors.red,
     }
 })

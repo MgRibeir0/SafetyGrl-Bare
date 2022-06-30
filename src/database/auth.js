@@ -100,16 +100,12 @@ export async function handleLoginEmailAsync(email, password) {
 
     try {
         const user = await auth().signInWithEmailAndPassword(email, password);
-        return user;
+        return await user;
     }
     catch (error) {
         console.log(error.message)
-        if (error.message.includes('auth/')) Alert.alert('❌', 'Por favor, verifique seu email e senha. Se você não possui uma conta, clique em "Criar conta"');
+        return error.message
     }
-
-    if (user != null) return await user;
-    return null;
-
 }
 
 export async function handleSignOut() {
