@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Dimensions, PermissionsAndroid } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, PermissionsAndroid, Platform } from 'react-native'
 import React from 'react'
 import auth from '@react-native-firebase/auth'
 import Colors from '../constants/Colors'
