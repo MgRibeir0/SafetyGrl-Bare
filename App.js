@@ -15,6 +15,10 @@ BackHandler.addEventListener('hardwareBackPress', () => {
     return true;
 })
 
+import { LogBox } from 'react-native'
+LogBox.ignoreLogs(['AsyncStorage has been extracted from react-native core and will be removed in a future release.', "Warning: Can't perform a React state update on an unmounted component."]);
+
+
 const Stack = createNativeStackNavigator();
 
 function App() {

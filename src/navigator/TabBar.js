@@ -1,8 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import Home from '../screens/Home';
-import Statements from '../screens/Statements';
 import User from '../screens/User';
 import Complaint from './../screens/Complaint';
 import Settings from './../screens/Settings';
@@ -10,6 +8,8 @@ import Colors from "../constants/Colors";
 
 import Icon from 'react-native-vector-icons/Ionicons'
 import ButtonNew from "../components/ButtonNew";
+import StatementsStack from "./StatementsStack";
+import Home from "../screens/Home";
 
 const Tab = createBottomTabNavigator();
 
@@ -40,7 +40,7 @@ export default function TabBar() {
 
             <Tab.Screen
                 name="Statements"
-                component={Statements}
+                component={StatementsStack}
                 options={{
                     tabBarIcon: ({ size, color, focused }) => (<Icon name={focused ? 'ios-chatbox-ellipses' : 'ios-chatbox-ellipses-outline'} size={size} color={color} />)
                 }}

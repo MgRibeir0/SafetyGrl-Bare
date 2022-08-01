@@ -124,12 +124,13 @@ export async function handleSignOut() {
 
 /**
  * 
- * @param {string}   email
- * @param {string}   password
+ * @param {string} email
+ * @param {string} password
+ * @param {string} name Used for {@link createUser()} function
+ * @param {string} telphone Used for {@link createUser()} function
  * 
  * 
- * @returns {boolean} 0 if unsuccessful
- * @returns {boolean} 1 if successful
+ * @returns {boolean} true or false
  */
 export async function signUpEmailPassword(email, password, name, telphone) {
 
@@ -179,7 +180,11 @@ const isValidEmail = email => {
 
 /**
  * 
- * 8 Digits, no spaces, 1 uppercase, 1 lowercase, 1 number
+ * - 8 digits
+ * - no spaces 
+ * - 1 uppercase 
+ * - 1 lowercase
+ * - 1 number
  * 
  * @param {String} password
  * @returns {boolean} true or false
@@ -194,7 +199,7 @@ const isValidPassword = password => {
  * Uses the firebase method to send a email verification.
  * Will trigger the onAuthStateChanged event.
  * 
- * @param {String} opt - Options for actionCodeSettings
+ * @param {string} opt - Options for actionCodeSettings
  * 
  * @returns {boolean} true - Success, email sent
  * @returns {boolean} false - Error

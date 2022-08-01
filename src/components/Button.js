@@ -8,7 +8,7 @@ const width = Dimensions.get('window').width
 const Button = ({ text, onPress, type = 'filled', bordered = false, size = 'large', colorBg = '#3f51b5', colorText = '#6371c2' }) => {
     const large = width / 1.3
     const small = width / 2
-    const btnSize = size === 'large' ? large : small
+    const btnSize = size === 'large' ? large : size === 'small' ? small : size
     const btnBgColor = type === 'filled' ? colorBg : 'transparent'
     const btnTextColor = type === 'filled' ? '#ffffff' : colorText
     const btnBorderRadius = bordered ? 30 : 5

@@ -40,7 +40,7 @@ export default function Login({ navigation }) {
                 style={styles.containerHeader}
                 ref={animText}
                 onAnimationEnd={() => { if (animAway) navigation.navigate('TabBar') }}>
-                <Text style={styles.message}>Bem vinde!</Text>
+                <Text style={styles.message}>Bem vinda!</Text>
             </Animatable.View>
 
             <Animatable.View

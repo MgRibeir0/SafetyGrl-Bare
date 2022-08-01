@@ -1,20 +1,20 @@
-import { View, Text, Animated, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 
 export default function Settings() {
+
     return (
-        <View>
-            <Animated.View style={styles.test}>
-                <Text>Settings</Text>
-            </Animated.View>
+        <View style={styles.container}>
+            <Text style={{ fontSize: 25, fontWeight: 'bold' }}>🚧🚧 Under Construction 🚧🚧</Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-
-    test: {
+    container: {
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'yellow'
     }
-
 });
